@@ -11,21 +11,44 @@
     OrderDAO dao = new OrderDAO();
     List<Order> orders = dao.getAllOrders();
 
-    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd MMM yyyy, hh:mm a");
+    java.text.SimpleDateFormat sdf =
+            new java.text.SimpleDateFormat("dd MMM yyyy, hh:mm a");
 %>
 
+<!DOCTYPE html>
 <html>
 <head>
     <title>Admin - All Orders</title>
 
     <style>
-        table { width:100%; border-collapse: collapse; background:white; }
-        th, td { padding: 10px; border: 1px solid #ccc; text-align:center; }
-        .btn { background:#007bff; color:white; padding:6px 12px; border-radius:6px; text-decoration:none; }
-        .delivered { color:green; font-weight:bold; }
-        .pending { color:orange; font-weight:bold; }
+        table {
+            width:100%;
+            border-collapse: collapse;
+            background:white;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align:center;
+        }
+        .btn {
+            background:#007bff;
+            color:white;
+            padding:6px 12px;
+            border-radius:6px;
+            text-decoration:none;
+        }
+        .delivered {
+            color:green;
+            font-weight:bold;
+        }
+        .pending {
+            color:orange;
+            font-weight:bold;
+        }
     </style>
 </head>
+
 <body>
 
 <h2 style="text-align:center;">All Orders</h2>
@@ -41,55 +64,65 @@
     <th>Action</th>
 </tr>
 
-<%  
-   if (orders != null && orders.size() > 0) {
-       for (Order o : orders) { 
+<%
+    if (orders != null && !orders.isEmpty()) {
+        for (Order o : orders) {
+
+            String status = o.getStatus();
+            if (status == null) status = "Pending";
 %>
 
 <tr>
-
     <td><%= o.getId() %></td>
     <td><%= o.getUserId() %></td>
     <td>₹ <%= o.getTotal() %></td>
     <td><%= sdf.format(o.getCreatedAt()) %></td>
 
-    <td><%= o.getStatus() %></td>
+    <td class="<%= "Delivered".equalsIgnoreCase(status) ? "delivered" : "pending" %>">
+        <%= status %>
+    </td>
 
     <!-- STATUS DROPDOWN -->
     <td>
-        <form action="updateOrderStatus.jsp" method="post" style="margin:0;">
+        <form action="admin/updateOrderStatus.jsp" method="post" style="margin:0;">
             <input type="hidden" name="oid" value="<%= o.getId() %>">
 
             <select name="status" onchange="this.form.submit()">
-                <option <%= o.getStatus().equals("Pending") ? "selected" : "" %>>Pending</option>
-                <option <%= o.getStatus().equals("Packed") ? "selected" : "" %>>Packed</option>
-                <option <%= o.getStatus().equals("Shipped") ? "selected" : "" %>>Shipped</option>
-                <option <%= o.getStatus().equals("Out for Delivery") ? "selected" : "" %>>Out for Delivery</option>
-                <option <%= o.getStatus().equals("Delivered") ? "selected" : "" %>>Delivered</option>
+                <option value="Pending" <%= "Pending".equalsIgnoreCase(status) ? "selected" : "" %>>
+                    Pending
+                </option>
+                <option value="Packed" <%= "Packed".equalsIgnoreCase(status) ? "selected" : "" %>>
+                    Packed
+                </option>
+                <option value="Shipped" <%= "Shipped".equalsIgnoreCase(status) ? "selected" : "" %>>
+                    Shipped
+                </option>
+                <option value="Out for Delivery" <%= "Out for Delivery".equalsIgnoreCase(status) ? "selected" : "" %>>
+                    Out for Delivery
+                </option>
+                <option value="Delivered" <%= "Delivered".equalsIgnoreCase(status) ? "selected" : "" %>>
+                    Delivered
+                </option>
             </select>
         </form>
     </td>
 
-    <!-- MARK DELIVERED BUTTON -->
-   <td>
-    <% if (!"Delivered".equalsIgnoreCase(o.getStatus())) { %>
-
-        <a class="btn" href="updateOrderStatus.jsp?oid=<%= o.getId() %>&status=Delivered">
-            Mark Delivered
-        </a>
-
-    <% } else { %>
-
-        ✔ Completed
-
-    <% } %>
-</td>
-
+    <!-- MARK DELIVERED -->
+    <td>
+        <% if (!"Delivered".equalsIgnoreCase(status)) { %>
+            <a class="btn"
+               href="admin/updateOrderStatus.jsp?oid=<%= o.getId() %>&status=Delivered">
+                Mark Delivered
+            </a>
+        <% } else { %>
+            ✔ Completed
+        <% } %>
+    </td>
 </tr>
 
 <%
-       }
-   } else {
+        }
+    } else {
 %>
 
 <tr>

@@ -12,7 +12,7 @@
     // Read order ID from URL
     int oid = Integer.parseInt(request.getParameter("oid"));
 
-    // Load orders
+    // Load orders for logged-in user
     OrderDAO dao = new OrderDAO();
     List<Order> list = dao.getOrdersByUserId(u.getUserId());
 
@@ -29,10 +29,20 @@
         return;
     }
 
+    // Read status from DB
     String status = order.getStatus();
     if (status == null) status = "Pending";
 
-    status = status.trim().toLowerCase(); // normalize
+    status = status.trim().toLowerCase();
+
+    // ---------------------------------
+    // STATUS → STEP MAPPING (FIXED)
+    // ---------------------------------
+    int step = 1; // Order Placed
+
+    if (status.equals("delivered")) {
+        step = 5;
+    }
 %>
 
 <!DOCTYPE html>
@@ -107,12 +117,6 @@
             font-weight: bold;
         }
 
-        .date {
-            font-size: 14px;
-            color: #555;
-            margin-top: 4px;
-        }
-
         .back-btn {
             display: inline-block;
             margin-top: 30px;
@@ -128,48 +132,47 @@
             opacity: 0.85;
         }
     </style>
-
 </head>
+
 <body>
 
 <div class="container">
 
     <h2>Track Order #<%= oid %></h2>
 
-    <%-- FLIPKART STEPS --%>
     <div class="timeline">
 
-        <!-- STEP 1: ORDER PLACED -->
+        <!-- STEP 1 -->
         <div class="step">
             <div class="circle active"></div>
-            <div class="line <%= (!status.equals("pending")) ? "active" : "" %>"></div>
+            <div class="line <%= step >= 2 ? "active" : "" %>"></div>
             <div class="label">Order Placed</div>
         </div>
 
-        <!-- STEP 2: PACKED -->
+        <!-- STEP 2 -->
         <div class="step">
-            <div class="circle <%= (status.equals("packed") || status.equals("shipped") || status.equals("out for delivery") || status.equals("delivered")) ? "active" : "" %>"></div>
-            <div class="line <%= (status.equals("shipped") || status.equals("out for delivery") || status.equals("delivered")) ? "active" : "" %>"></div>
+            <div class="circle <%= step >= 2 ? "active" : "" %>"></div>
+            <div class="line <%= step >= 3 ? "active" : "" %>"></div>
             <div class="label">Packed</div>
         </div>
 
-        <!-- STEP 3: SHIPPED -->
+        <!-- STEP 3 -->
         <div class="step">
-            <div class="circle <%= (status.equals("shipped") || status.equals("out for delivery") || status.equals("delivered")) ? "active" : "" %>"></div>
-            <div class="line <%= (status.equals("out for delivery") || status.equals("delivered")) ? "active" : "" %>"></div>
+            <div class="circle <%= step >= 3 ? "active" : "" %>"></div>
+            <div class="line <%= step >= 4 ? "active" : "" %>"></div>
             <div class="label">Shipped</div>
         </div>
 
-        <!-- STEP 4: OUT FOR DELIVERY -->
+        <!-- STEP 4 -->
         <div class="step">
-            <div class="circle <%= (status.equals("out for delivery") || status.equals("delivered")) ? "active" : "" %>"></div>
-            <div class="line <%= (status.equals("delivered")) ? "active" : "" %>"></div>
+            <div class="circle <%= step >= 4 ? "active" : "" %>"></div>
+            <div class="line <%= step >= 5 ? "active" : "" %>"></div>
             <div class="label">Out for Delivery</div>
         </div>
 
-        <!-- STEP 5: DELIVERED -->
+        <!-- STEP 5 -->
         <div class="step">
-            <div class="circle <%= (status.equals("delivered")) ? "active" : "" %>"></div>
+            <div class="circle <%= step >= 5 ? "active" : "" %>"></div>
             <div class="label">Delivered</div>
         </div>
 

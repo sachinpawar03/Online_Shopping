@@ -1,19 +1,26 @@
 <%@ page import="java.util.*, com.online.dao.OrderDAO, com.online.model.OrderItem, com.online.model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <%
+    // Check login
     User u = (User) session.getAttribute("user");
     if (u == null) {
         response.sendRedirect("login.jsp");
         return;
     }
 
-    // FIX: define oid first
-    int oid = Integer.parseInt(request.getParameter("oid"));
+    // Get orderId from session
+    Integer oidObj = (Integer) session.getAttribute("orderId");
+    if (oidObj == null) {
+        out.println("Order ID not found.");
+        return;
+    }
+    int oid = oidObj;
 
+    // Fetch order items
     OrderDAO dao = new OrderDAO();
     List<OrderItem> items = dao.getOrderItems(oid);
 %>
-
 
 <!DOCTYPE html>
 <html>
@@ -54,8 +61,8 @@
         }
 
         .item-box img {
-            width: 90px;
-            height: 90px;
+            width: 100px;
+            height: 100px;
             object-fit: cover;
             border-radius: 8px;
             margin-right: 20px;
@@ -72,8 +79,8 @@
         }
 
         .qty {
-            font-size: 15px;
-            margin-top: 4px;
+            font-size: 14px;
+            margin-top: 5px;
         }
 
         .price {
@@ -103,10 +110,11 @@
         }
 
         .back-btn:hover {
-            opacity: .85;
+            opacity: 0.9;
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -119,9 +127,7 @@
 
         <div class="item-box">
 
-            <!-- Product Image -->
-           <img src="images/<%= it.getProductImage() %>"
-     style="width:90px;height:90px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">>
+            <img src="images/<%= it.getProductImage() %>" alt="Product Image">
 
             <div class="details">
                 <div class="name"><%= it.getProductName() %></div>

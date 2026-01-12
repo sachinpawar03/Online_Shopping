@@ -1,7 +1,6 @@
 <%@ page import="java.util.*, com.online.model.CartItem"%>
 <%@ page import="com.online.model.Product"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.online.model.CartItem" %>
 
 <!DOCTYPE html>
 <html>
@@ -55,7 +54,6 @@ table td {
 }
 
 .total-row {
-	background: #f9f9f9;
 	font-weight: bold;
 	font-size: 17px;
 }
@@ -65,12 +63,7 @@ input[type=text], input[type=password], input[type=month] {
 	padding: 10px;
 	border-radius: 8px;
 	border: 1px solid #aaa;
-	margin-top: 5px;
 	margin-bottom: 15px;
-}
-
-input[type=radio] {
-	margin-right: 5px;
 }
 
 button {
@@ -82,173 +75,170 @@ button {
 	font-size: 18px;
 	border-radius: 8px;
 	cursor: pointer;
-	margin-top: 20px;
 }
 
-button:hover {
-	opacity: 0.9;
-}
-
-.payment-title {
-	margin-bottom: 8px;
-	font-size: 18px;
-}
-
-/* 🔴 REMOVE BUTTON */
 .remove-btn {
 	background-color: #ff3b3b;
 	color: white;
 	border: none;
 	padding: 6px 14px;
-	font-size: 14px;
 	border-radius: 6px;
-	cursor: pointer;
-}
-
-.remove-btn:hover {
-	background-color: #cc0000;
-}
 }
 </style>
 </head>
 
 <body>
 
-	<div class="cart-container">
+<div class="cart-container">
 
-		<h2>Your Shopping Cart</h2>
+<h2>Your Shopping Cart</h2>
 
-		<%
-		Map<Integer, CartItem> cart = (Map<Integer, CartItem>) session.getAttribute("cart");
+<%
+Map<Integer, CartItem> cart = (Map<Integer, CartItem>) session.getAttribute("cart");
+if (cart == null || cart.isEmpty()) {
+%>
 
-		if (cart == null || cart.isEmpty()) {
-		%>
+<div class="cart-box">
+	<h3>Your cart is empty.</h3>
+</div>
 
-		<div class="cart-box">
-			<h3>Your cart is empty.</h3>
-		</div>
+<%
+} else {
+double grandTotal = 0;
+%>
 
-		<%
-		} else {
-		%>
+<div class="cart-box">
+<table>
+<tr>
+	<th>Image</th>
+	<th>Name</th>
+	<th>Price</th>
+	<th>Qty</th>
+	<th>Total</th>
+	<th>Remove</th>
+</tr>
 
-		<div class="cart-box">
-			<table>
-				<tr>
-					<th>Image</th>
-					<th>Name</th>
-					<th>Price</th>
-					<th>Qty</th>
-					<th>Total</th>
-					<th>Remove</th>
-				</tr>
+<%
+for (CartItem item : cart.values()) {
+	Product p = item.getProduct();
+	int qty = item.getQuantity();
+	double total = p.getPrice() * qty;
+	grandTotal += total;
+%>
 
-				<%
-				double grandTotal = 0;
-				for (CartItem item : cart.values()) {
-					Product p = item.getProduct();
-					int qty = item.getQuantity();
-					double total = p.getPrice() * qty;
-					grandTotal += total;
-				%>
+<tr>
+	<td><img src="<%=request.getContextPath()%>/images/<%=p.getImage()%>" width="80"></td>
+	<td><%=p.getName()%></td>
+	<td>₹<%=p.getPrice()%></td>
+	<td><%=qty%></td>
+	<td>₹<%=total%></td>
+	<td>
+		<form action="<%=request.getContextPath()%>/removeFromCart" method="post">
+			<input type="hidden" name="productId" value="<%=p.getProductId()%>">
+			<button class="remove-btn">Remove</button>
+		</form>
+	</td>
+</tr>
 
-				<tr>
-					<td><img
-						src="<%=request.getContextPath()%>/images/<%=p.getImage()%>"
-						width="80" height="80"></td>
-					<td><%=p.getName()%></td>
-					<td>₹<%=p.getPrice()%></td>
-					<td><%=qty%></td>
-					<td>₹<%=total%></td>
+<% } %>
 
-					<!-- 🔴 REMOVE BUTTON HERE -->
-					<td>
-						<form action="removeFromCart" method="post">
-							<input type="hidden" name="productId"
-								value="<%=p.getProductId()%>">
-							<button type="submit" class="remove-btn">Remove</button>
-						</form>
+<tr class="total-row">
+	<td colspan="4">Grand Total</td>
+	<td>₹<%=grandTotal%></td>
+	<td></td>
+</tr>
 
-					</td>
-				</tr>
+</table>
+</div>
 
-				<%
-				}
-				%>
+<!-- PAYMENT BOX -->
+<div class="payment-box">
 
-				<tr class="total-row">
-					<td colspan="4" align="right">Grand Total:</td>
-					<td>₹<%=grandTotal%></td>
-					<td></td>
-				</tr>
+<form action="<%=request.getContextPath()%>/checkout"
+      method="post"
+      onsubmit="return validatePayment();">
 
-			</table>
-		</div>
+<h3>Payment Options</h3>
 
+<label>
+<input type="radio" name="paymentMode" value="CARD" checked
+       onclick="showPayment('CARD')">
+Pay with Card
+</label><br><br>
 
-		<!-- PAYMENT BOX -->
-		<div class="payment-box">
-			<form action="placeOrder" method="post">
+<label>
+<input type="radio" name="paymentMode" value="UPI"
+       onclick="showPayment('UPI')">
+Pay with UPI
+</label>
 
-				<input type="hidden" name="userId"
-					value="<%=session.getAttribute("userId")%>"> <input
-					type="hidden" name="total" value="<%=grandTotal%>">
+<hr>
 
-				<h3 class="payment-title">Payment Options</h3>
+<!-- CARD -->
+<div id="cardSection">
+	Card Holder Name:
+	<input type="text" name="cardHolder" id="cardHolder">
 
-				<label> <input type="radio" name="paymentOption"
-					value="card" checked onclick="showPayment('card')"> Pay
-					with Card
-				</label> <br> <br> <label> <input type="radio"
-					name="paymentOption" value="upi" onclick="showPayment('upi')">
-					Pay with UPI
-				</label>
+	Card Number:
+	<input type="text" name="cardNumber" id="cardNumber">
 
-				<hr>
+	Expiry Date:
+	<input type="month" name="expiry" id="expiry">
 
-				<!-- CARD SECTION -->
-				<div id="cardSection">
-					<h4>Card Payment Details</h4>
+	CVV:
+	<input type="password" name="cvv" id="cvv">
+</div>
 
-					Card Number: <input type="text" name="cardNumber"> Card
-					Holder Name: <input type="text" name="cardName"> Expiry
-					Date: <input type="month" name="expiry"> CVV: <input
-						type="password" name="cvv">
-				</div>
+<!-- UPI -->
+<div id="upiSection" style="display:none;">
+	UPI ID:
+	<input type="text" name="upiId" id="upiId">
+</div>
 
-				<!-- UPI SECTION -->
-				<div id="upiSection" style="display: none;">
-					<h4>UPI Payment</h4>
+<button type="submit">Pay Now</button>
 
-					Enter UPI ID: <input type="text" name="upiId"
-						placeholder="name@upi">
+</form>
+</div>
 
-					<p>You will receive a payment request on your UPI app.</p>
-				</div>
+<% } %>
 
-				<button type="submit">Pay Now</button>
+</div>
 
-			</form>
-		</div>
+<script>
+function showPayment(type) {
+	if (type === 'CARD') {
+		cardSection.style.display = "block";
+		upiSection.style.display = "none";
+	} else {
+		cardSection.style.display = "none";
+		upiSection.style.display = "block";
+	}
+}
 
-		<%
+function validatePayment() {
+	const mode = document.querySelector('input[name="paymentMode"]:checked').value;
+
+	if (mode === "CARD") {
+		if (!cardHolder.value ||
+			!/^\d{16}$/.test(cardNumber.value) ||
+			!expiry.value ||
+			!/^\d{3}$/.test(cvv.value)) {
+
+			alert("Please enter valid card details");
+			return false;
 		}
-		%>
+	}
 
-	</div>
-
-
-	<script>
-		function showPayment(type) {
-			if (type === 'card') {
-				document.getElementById('cardSection').style.display = 'block';
-				document.getElementById('upiSection').style.display = 'none';
-			} else {
-				document.getElementById('cardSection').style.display = 'none';
-				document.getElementById('upiSection').style.display = 'block';
-			}
+	if (mode === "UPI") {
+		if (!/^[a-zA-Z0-9._-]+@[a-zA-Z]+$/.test(upiId.value)) {
+			alert("Invalid UPI ID");
+			return false;
 		}
-	</script>
+	}
+
+	return true;
+}
+</script>
 
 </body>
 </html>

@@ -3,6 +3,10 @@
 <head>
 <title>Order Successful | Shopping Mart</title>
 
+<!-- ✅ AUTO REDIRECT AFTER 3 SECONDS -->
+<meta http-equiv="refresh"
+      content="3;url=<%=request.getContextPath()%>/placeorder.jsp">
+
 <style>
     body {
         margin: 0;
@@ -78,7 +82,6 @@
     .btn:hover {
         opacity: 0.9;
     }
-
 </style>
 
 </head>
@@ -94,10 +97,17 @@
 
     <h1>Order Successful!</h1>
 
-    <p>Your order has been placed successfully.<br>
-       Thank you for shopping with us!</p>
+    <p>
+        Your order has been placed successfully.<br>
+        Thank you for shopping with us!
+    </p>
 
-    <a href="index.jsp" class="btn">Continue Shopping</a>
+    <p><b>Redirecting to order details...</b></p>
+
+    <!-- OPTIONAL: manual button -->
+    <a href="<%=request.getContextPath()%>/viewOrder.jsp" class="btn">
+        View Order Details
+    </a>
 
 </div>
 
