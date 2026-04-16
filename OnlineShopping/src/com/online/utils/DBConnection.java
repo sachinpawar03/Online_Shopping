@@ -13,10 +13,10 @@ public class DBConnection {
 			// 1) Load Driver
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
-			// 2) Establish Connection (your DB details)
+			// 2) Establish Connection (UPDATED - Railway DB)
 			Connection con = DriverManager.getConnection(
-				    "jdbc:mysql://localhost:3306/shopping_db?useSSL=false&allowPublicKeyRetrieval=true",
-				    "root", "Sachin@123"
+				    "jdbc:mysql://gondola.proxy.rlwy.net:20821/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+				    "root", "cRYKSiHAnswADANuOrTjjcYmiraWnvHd"
 				);
 
 			// 3) Create Statement
@@ -45,7 +45,7 @@ public class DBConnection {
 		}
 	}
 
-	// ⭐ THIS is the method your project (UserDAO) actually uses
+	// ⭐ Used by your DAO classes (IMPORTANT)
 	public static Connection getConnection() {
 		Connection con = null;
 
@@ -53,16 +53,16 @@ public class DBConnection {
 			// 1) Load Driver
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
-			// 2) Establish Connection
+			// 2) Establish Connection (UPDATED)
 			con = DriverManager.getConnection(
-				    "jdbc:mysql://localhost:3306/shopping_db?useSSL=false&allowPublicKeyRetrieval=true",
-				    "root", "Sachin@123"
+				    "jdbc:mysql://gondola.proxy.rlwy.net:20821/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+				    "root", "cRYKSiHAnswADANuOrTjjcYmiraWnvHd"
 				);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return con; // ⭐ Now it returns a REAL connection, not null!
+		return con; // ✅ now works in Render
 	}
 }
