@@ -15,8 +15,7 @@ public class DBConnection {
 
 			// 2) Establish Connection (UPDATED - Railway DB)
 			Connection con = DriverManager.getConnection(
-				    "jdbc:mysql://gondola.proxy.rlwy.net:20821/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
-				    "root", "cRYKSiHAnswADANuOrTjjcYmiraWnvHd"
+					"mysql -h gondola.proxy.rlwy.net -u root -p cRYKSiHAnswADANuOrTjjcYmiraWnvHd --port 20821 --protocol=TCP railway"
 				);
 
 			// 3) Create Statement
