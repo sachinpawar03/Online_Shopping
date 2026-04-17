@@ -100,7 +100,7 @@
 
     <h2>Sign-In</h2>
 
-    <form action="${pageContext.request.contextPath}/login" method="post">
+<form action="${pageContext.request.contextPath}/admin/login" method="post">
 
         <label>Email or mobile phone number</label>
         <input type="text" name="email" required>
