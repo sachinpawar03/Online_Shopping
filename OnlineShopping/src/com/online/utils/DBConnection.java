@@ -48,25 +48,21 @@ public class DBConnection {
 
 	// ⭐ Used by your DAO classes (IMPORTANT)
 	public static Connection getConnection() {
-		Connection con = null;
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver");
 
-		try {
-			// 1) Load Driver
-			Class.forName("com.mysql.cj.jdbc.Driver");
+	        Connection con = DriverManager.getConnection(
+	            "jdbc:mysql://gondola.proxy.rlwy.net:20821/railway?sslMode=REQUIRED",
+	            "root",
+	            "cRYKSiHAnswADANuOrTjjcYmiraWnvHd"
+	        );
 
-			// 2) Establish Connection (UPDATED)
-			con = DriverManager.getConnection(
-				    "jdbc:mysql://gondola.proxy.rlwy.net:20821/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
-				    "root", 
-				    "cRYKSiHAnswADANuOrTjjcYmiraWnvHd"
-				);
+	        System.out.println("✅ Connected to Railway DB");
+	        return con;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Connected to Railway DB!");
-		}
-
-		return con; // ✅ now works in Render
-		
-	}
-}
+	    } catch (Exception e) {
+	        System.out.println("❌ DB Connection Failed");
+	        e.printStackTrace();
+	        return null;
+	    }
+	}}
