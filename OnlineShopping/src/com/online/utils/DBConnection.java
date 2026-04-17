@@ -46,16 +46,20 @@ public class DBConnection {
 		}
 	}
 
+
 	// ⭐ Used by your DAO classes (IMPORTANT)
 	public static Connection getConnection() {
 	    try {
 	        Class.forName("com.mysql.cj.jdbc.Driver");
 
-	        Connection con = DriverManager.getConnection(
-	            "jdbc:mysql://gondola.proxy.rlwy.net:20821/railway?sslMode=REQUIRED",
-	            "root",
-	            "cRYKSiHAnswADANuOrTjjcYmiraWnvHd"
-	        );
+	        String url = System.getenv("DB_URL");
+	        String user = System.getenv("DB_USER");
+	        String pass = System.getenv("DB_PASS");
+
+	        System.out.println("URL: " + url);
+	        System.out.println("USER: " + user);
+
+	        Connection con = DriverManager.getConnection(url, user, pass);
 
 	        System.out.println("✅ Connected to Railway DB");
 	        return con;
@@ -65,4 +69,5 @@ public class DBConnection {
 	        e.printStackTrace();
 	        return null;
 	    }
-	}}
+	}
+}
