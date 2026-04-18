@@ -8,7 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 
-@WebServlet("/admin/login")
+//@WebServlet("/admin/login")
 public class LoginServlet extends HttpServlet {
 
     @Override
