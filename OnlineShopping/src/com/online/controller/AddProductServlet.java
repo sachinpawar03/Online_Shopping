@@ -1,14 +1,19 @@
 package com.online.controller;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.online.dao.ProductDAO;
 import com.online.model.Product;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-
-import java.io.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 @WebServlet("/addProduct")
 @MultipartConfig
