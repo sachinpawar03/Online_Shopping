@@ -8,15 +8,7 @@
     <display-name>OnlineShopping</display-name>
 
     <!-- Register Servlet -->
-    <servlet>
-        <servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>com.online.controller.RegisterServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>RegisterServlet</servlet-name>
-        <url-pattern>/register</url-pattern>
-    </servlet-mapping>
+   
 
     <!-- Cart Servlet -->
     <servlet>

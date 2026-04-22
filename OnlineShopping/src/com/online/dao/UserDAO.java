@@ -21,12 +21,15 @@ public class UserDAO {
             ps.setString(1, u.getName());
             ps.setString(2, u.getEmail());
             ps.setString(3, u.getPassword());
+            
+            System.out.println(">>> Register method called");
 
             // Default role = "user"
             String role = (u.getRole() == null || u.getRole().isEmpty()) ? "user" : u.getRole();
             ps.setString(4, role);
 
             // Default status = active
+            
             ps.setString(5, "active");
 
             return ps.executeUpdate() > 0;
