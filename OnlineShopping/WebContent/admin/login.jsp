@@ -114,7 +114,7 @@
     </form>
 
     <div class="register">
-        New to Shopping Mart? <a href="register.jsp">Create your account</a>
+        <a href="${pageContext.request.contextPath}/register.jsp">Create your account</a>
     </div>
 
 </div>
