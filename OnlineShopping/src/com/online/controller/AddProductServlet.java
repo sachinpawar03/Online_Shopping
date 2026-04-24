@@ -36,14 +36,14 @@ public class AddProductServlet extends HttpServlet {
         Part imagePart = req.getPart("image");
         String imageName = imagePart.getSubmittedFileName();
 
-        // Save image
-        String uploadPath = req.getServletContext().getRealPath("") + "images";
+       
+        String uploadPath = "D:/uploads";   // ✅ permanent folder
         File folder = new File(uploadPath);
         if (!folder.exists()) folder.mkdir();
 
         imagePart.write(uploadPath + File.separator + imageName);
 
-        // Save DB
+     
         Product p = new Product();
         p.setName(name);
         p.setDescription(description);
@@ -55,7 +55,7 @@ public class AddProductServlet extends HttpServlet {
         ProductDAO dao = new ProductDAO();
         dao.addProduct(p);
 
-        // CORRECT redirect (preserves session)
+        
         resp.sendRedirect(req.getContextPath() + "/admin/manageProducts.jsp");
     }
 }

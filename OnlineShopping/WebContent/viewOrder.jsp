@@ -2,22 +2,24 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%
-    // Check login
+    
     User u = (User) session.getAttribute("user");
     if (u == null) {
         response.sendRedirect("login.jsp");
         return;
     }
+    String oidParam = request.getParameter("oid");
 
-    // Get orderId from session
-    Integer oidObj = (Integer) session.getAttribute("orderId");
-    if (oidObj == null) {
-        out.println("Order ID not found.");
+    if (oidParam == null || oidParam.equals("null")) {
+        out.println("Invalid Order ID.");
         return;
     }
-    int oid = oidObj;
 
-    // Fetch order items
+
+   
+    int oid = Integer.parseInt(oidParam);
+
+    
     OrderDAO dao = new OrderDAO();
     List<OrderItem> items = dao.getOrderItems(oid);
 %>
@@ -123,27 +125,39 @@
 
     <% double grandTotal = 0; %>
 
-    <% for (OrderItem it : items) { %>
+    <% if (items != null && !items.isEmpty()) { %>
 
-        <div class="item-box">
+        <% for (OrderItem it : items) { %>
 
-            <img src="images/<%= it.getProductImage() %>" alt="Product Image">
+            <div class="item-box">
+    <img src="images/<%= it.getProductImage() %>" alt="Product Image">
 
-            <div class="details">
-                <div class="name"><%= it.getProductName() %></div>
+                <div class="details">
 
-                <div class="qty">
-                    Quantity: <%= it.getQuantity() %>
+                   
+                    <div class="name"><%= it.getProductName() %></div>
+
+                    
+                    <div class="qty">
+                        Quantity: <%= it.getQuantity() %>
+                    </div>
+
+                    <!-- ✅ Price -->
+                    <div class="price">
+                        ₹ <%= it.getPrice() %>
+                    </div>
+
                 </div>
 
-                <div class="price">
-                    ₹ <%= it.getPrice() %>
-                </div>
             </div>
 
-        </div>
+            <% grandTotal += (it.getPrice() * it.getQuantity()); %>
 
-        <% grandTotal += (it.getPrice() * it.getQuantity()); %>
+        <% } %>
+
+    <% } else { %>
+
+        <p>No items found for this order.</p>
 
     <% } %>
 

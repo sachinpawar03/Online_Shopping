@@ -17,6 +17,15 @@ public class BuyNowServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        
+        HttpSession session = req.getSession(false);
+
+        if (session == null || session.getAttribute("user") == null) {
+        	resp.sendRedirect(req.getContextPath() + "/admin/login.jsp?msg=Please login first to buy product");
+            return;
+        }
+
+      
         int productId = Integer.parseInt(req.getParameter("productId"));
 
         ProductDAO dao = new ProductDAO();
@@ -27,8 +36,6 @@ public class BuyNowServlet extends HttpServlet {
             resp.sendRedirect("products");
             return;
         }
-
-        HttpSession session = req.getSession();
 
         Map<Integer, CartItem> cart = new HashMap<>();
         cart.put(productId, new CartItem(p, 1));

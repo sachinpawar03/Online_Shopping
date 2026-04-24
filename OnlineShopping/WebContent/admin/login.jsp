@@ -10,16 +10,37 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-
-            /* 🔥 BLUE GRADIENT BACKGROUND */
             background: linear-gradient(135deg, #4e73df, #224abe);
             height: 100vh;
+
+            /* ✅ center everything vertically */
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* 🔥 LOGIN CARD (CENTERED) */
+        /* ✅ Wrapper to hold alert + login box */
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 🔥 Stylish Alert Box */
+        .alert-box {
+            background-color: #ffe6e6;
+            color: #d8000c;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 500;
+            text-align: center;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* LOGIN CARD */
         .login-box {
             width: 350px;
             background: #ffffff;
@@ -58,7 +79,6 @@
             background: #e9ecef;
         }
 
-        /* 🔥 BUTTON STYLE */
         .btn {
             width: 100%;
             margin-top: 20px;
@@ -90,7 +110,6 @@
             text-decoration: underline;
         }
 
-        /* OPTIONAL LOGO */
         .logo {
             width: 40px;
             height: 40px;
@@ -103,32 +122,58 @@
 
 <body>
 
-<div class="login-box">
+<div class="wrapper">
 
-    <!-- 🔥 Small top logo -->
-    <div class="logo"></div>
+    <!-- ✅ ALERT MESSAGE (CENTERED ABOVE BOX) -->
+    <%
+    String msg = request.getParameter("msg");
+    if (msg != null) {
+    %>
+        <div class="alert-box">
+            <%= msg %>
+        </div>
+    <%
+    }
+    %>
 
-    <h2>Login</h2>
+    <!-- LOGIN BOX -->
+    <div class="login-box">
 
-    <form action="${pageContext.request.contextPath}/admin/login" method="post">
+        <div class="logo"></div>
 
-        <label>Email</label>
-        <input type="text" name="email" required>
+        <h2>Login</h2>
 
-        <label>Password</label>
-        <input type="password" name="password" required>
+        <form action="${pageContext.request.contextPath}/admin/login" method="post">
 
-        <button type="submit" class="btn">SIGN IN</button>
+            <label>Email</label>
+            <input type="text" name="email" required>
 
-    </form>
+            <label>Password</label>
+            <input type="password" name="password" required>
 
-    <div class="extra">
-        <a href="#">Forgot Password?</a><br><br>
-        Don’t have an account?
-        <a href="${pageContext.request.contextPath}/register.jsp">Sign up</a>
+            <button type="submit" class="btn">SIGN IN</button>
+
+        </form>
+
+        <div class="extra">
+            <a href="#">Forgot Password?</a><br><br>
+            Don’t have an account?
+            <a href="${pageContext.request.contextPath}/register.jsp">Sign up</a>
+        </div>
+
     </div>
 
 </div>
+
+<!-- ✅ Auto hide alert -->
+<script>
+setTimeout(() => {
+    let alertBox = document.querySelector('.alert-box');
+    if (alertBox) {
+        alertBox.style.display = 'none';
+    }
+}, 3000);
+</script>
 
 </body>
 </html>

@@ -18,7 +18,7 @@ public class PlaceOrderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession(false);
+    	HttpSession session = request.getSession(true);
 
         // 🔥 FIX: redirect user (not admin)
         if (session == null || session.getAttribute("userId") == null) {
@@ -56,7 +56,8 @@ public class PlaceOrderServlet extends HttpServlet {
 
         if (orderId > 0) {
             session.removeAttribute("cart");
-            session.setAttribute("lastOrderId", orderId);
+            session.setAttribute("orderId", orderId);
+            System.out.println("ORDER ID SAVED: " + orderId);
             response.sendRedirect(request.getContextPath() + "/orderSuccess.jsp");
         } else {
             response.sendRedirect(request.getContextPath() + "/orderFailed.jsp");

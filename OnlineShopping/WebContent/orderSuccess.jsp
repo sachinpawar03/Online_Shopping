@@ -1,3 +1,12 @@
+<%
+    Integer oid = (Integer) session.getAttribute("orderId");
+
+    if (oid == null) {
+        out.println("Order ID missing. Please place order again.");
+        return;
+    }
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,7 +14,7 @@
 
 <!-- ✅ AUTO REDIRECT AFTER 3 SECONDS -->
 <meta http-equiv="refresh"
-      content="3;url=<%=request.getContextPath()%>/placeorder.jsp">
+      content="3;url=<%=request.getContextPath()%>/viewOrder.jsp?oid=<%=oid%>">
 
 <style>
     body {
@@ -105,7 +114,7 @@
     <p><b>Redirecting to order details...</b></p>
 
     <!-- OPTIONAL: manual button -->
-    <a href="<%=request.getContextPath()%>/viewOrder.jsp" class="btn">
+    <a href="<%=request.getContextPath()%>/viewOrder.jsp?oid=<%=oid%>" class="btn">
         View Order Details
     </a>
 

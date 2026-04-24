@@ -35,7 +35,7 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-        // ================= PAYMENT VALIDATION =================
+    
         String paymentMode = req.getParameter("paymentMode");
         boolean paymentValid = false;
 
@@ -71,7 +71,7 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-        // ================= CREATE ORDER =================
+       
         double total = 0;
         List<OrderItem> items = new ArrayList<>();
 
@@ -98,7 +98,7 @@ public class CheckoutServlet extends HttpServlet {
             session.setAttribute("total", total);
             session.setAttribute("paymentMode", paymentMode);
 
-            // ✅ SUCCESS PAGE FIRST
+            
             resp.sendRedirect(req.getContextPath() + "/orderSuccess.jsp");
             return;
         }

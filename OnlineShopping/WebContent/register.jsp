@@ -81,9 +81,7 @@
             text-decoration: underline;
         }
 
-        /* ----------------------------
-           ⭐ Improved Role Selector
-           ---------------------------- */
+        /*  Improved Role Selector */
         .role-container {
             margin-top: 5px;
             font-size: 17px;
@@ -93,7 +91,7 @@
         }
 
         .role-container input {
-            display: none; /* hide real radios */
+            display: none; 
         }
 
         .admin-option {
@@ -102,7 +100,7 @@
             padding-top: 5px;
         }
 
-        /* ⭐ Admin shows on hover OR when selected */
+        /* Admin shows on hover OR when selected */
         .role-container:hover .admin-option,
         .admin-option.keep-visible {
             display: block !important;
